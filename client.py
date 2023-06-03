@@ -1,49 +1,73 @@
-# cliente.py
 import socket
 import json
 from app import App
 
-# create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+"""
+    Create a socket object.
+"""
 
-# get a local machine name
-# IP server
-host = '127.0.0.1'
-# Server PORT
-port = 9999
+host = '127.0.0.1'  
+port = 9999  
+"""
+    Set the server's IP address and port.
+    host: IP server address.
+    port: Server port.
+"""
 
-# connection to hostname on the port
 s.connect((host, port))
+"""
+    Connection to hostname on the port.
+"""
 
-# create a App object
-clientApp = App()
+client_app = App()
+"""
+    Create an instance of the App class.
+"""
 
-# collecting user data
-values = clientApp.collectUserData()
+values = client_app.collect_user_data()
+"""
+    Collect user data
+"""
 
-# processing user data
-listData = clientApp.validateData(values)
-finalData = clientApp.generateDict(listData)
+list_data = client_app.validate_data(values)
+final_data = client_app.generate_dict(list_data)
+"""
+    Process user data
+"""
 
-# serialising data
-# pass the data to json
-data = json.dumps(finalData)
+data = json.dumps(final_data)
+"""
+    Serialize data to JSON
+"""
 
-# pass to bytes
 data = data.encode("ascii")
+"""
+    Convert data to bytes
+"""
 
-# send data to server
 s.send(data)
+"""
+    Send data to the server.
+"""
 
-# recive no more than 1024 bytes
-# pass to json
+
 response = s.recv(1024).decode()
+"""
+# Receive response from the server (no more than 1024 bytes)
+"""
 
-# pass to dict
 response = json.loads(response)
+"""
+    Convert response from JSON to a dictionary
+"""
 
-# menu
-clientApp.menu(response)
+client_app.menu(response)
+"""
+    Display the menu using the response data
+"""
 
-# close connection
 s.close()
+"""
+    Close the connection
+"""
